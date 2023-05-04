@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  database:
+    image: mysql:5.7
+    container_name: database #Should match bookstore-api.py line #9
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Password123
+      MYSQL_USER: bookstore-user
+      MYSQL_PASSWORD: bookstore-pass123
+      MYSQL_DATABASE: bookstore_db
+    networks:
+      - bookstore_network
+
+  bookstore-app:
+    image: bookstore-app:latest #Should match main.tf line # 81 (in userdata)
+    container_name: bookstore-app
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - 80:80
+    networks:
+      - bookstore_network
+networks:
+  bookstore_network:
